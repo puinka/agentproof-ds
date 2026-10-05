@@ -56,8 +56,8 @@ export const Default: Story = {
     const table = c.getByRole('table', { name: 'Your quota applications' });
     // Each row is named by its row header.
     await expect(within(table).getAllByRole('rowheader')).toHaveLength(4);
-    // The scroll frame is focusable and named by the caption.
-    await expect(c.getByRole('region', { name: 'Your quota applications' })).toHaveAttribute('tabindex', '0');
+    // When the table fits, the frame is a plain box: no extra landmark.
+    await expect(c.queryByRole('region')).toBeNull();
   },
 };
 
@@ -92,7 +92,33 @@ export const Mobile: Story = {
   name: 'Mobile (scrolls sideways)',
   globals: { viewport: { value: 'mobile1', isRotated: false } },
   play: async ({ canvasElement }) => {
-    const region = within(canvasElement).getByRole('region');
+    // While it overflows, the frame is a focusable region with its own name, so keyboard users can scroll it.
+    const region = await within(canvasElement).findByRole('region', { name: 'Your quota applications (scrolls sideways)' });
     await expect(region.scrollWidth).toBeGreaterThan(region.clientWidth);
+    await expect(region).toHaveAttribute('tabindex', '0');
   },
+};
+
+/** Regression from build-run D: every agent put the table in a section named like its caption. */
+export const InASection: Story = {
+  name: 'In a section with the same heading',
+  args: { caption: 'Past payouts', hideCaption: true },
+  render: (args) => (
+    <section aria-labelledby="past-payouts" className="flex flex-col gap-4">
+      <h2 id="past-payouts" className="m-0 type-desktop-header-card-strong text-primary">Past payouts</h2>
+      <Table {...args} />
+    </section>
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await expect(c.getByRole('table', { name: 'Past payouts' })).toBeInTheDocument();
+    // Only one landmark carries the name "Past payouts": the section.
+    await expect(c.getAllByRole('region', { name: 'Past payouts' })).toHaveLength(1);
+  },
+};
+
+export const InASectionMobile: Story = {
+  ...InASection,
+  name: 'In a section, mobile',
+  globals: { viewport: { value: 'mobile1', isRotated: false } },
 };

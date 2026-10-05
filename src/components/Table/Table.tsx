@@ -1,4 +1,4 @@
-import { useId, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Icon } from '../../icons/Icon';
 
 /**
@@ -9,8 +9,11 @@ import { Icon } from '../../icons/Icon';
  * - Text columns align start; numbers and amounts align end with tabular figures.
  * - One column names the row (`isRowHeader`): usually the first.
  * - Sortable columns are buttons in the header; the sorted one has `aria-sort`.
- * - The table scrolls sideways inside its own frame on narrow screens; the frame is focusable so
- *   keyboard users can scroll it. Under ~5 columns on a phone, prefer a list of Cards.
+ * - The table scrolls sideways inside its own frame on narrow screens. Only while it actually overflows
+ *   is the frame a focusable, named region ("… (scrolls sideways)"), so keyboard users can scroll it.
+ *   When it fits, the frame is a plain box: no extra landmark that would clash with a section heading
+ *   of the same name (found in build-run D: 6/6 agents put the table in a section named like its caption).
+ * - Under ~5 columns on a phone, prefer a list of Cards.
  * - Rows are not clickable. Put the action in a cell (a link or Button `size="sm"`).
  */
 export interface TableColumn<T> {
@@ -32,8 +35,10 @@ export interface TableColumn<T> {
 export type SortDirection = 'ascending' | 'descending';
 
 export interface TableProps<T> {
-  /** Required. What the table lists. Also the name of the scroll frame. */
+  /** Required. What the table lists. The table's accessible name. */
   caption: string;
+  /** Name of the scroll frame while the table overflows. Defaults to "{caption} (scrolls sideways)". */
+  frameLabel?: string;
   hideCaption?: boolean;
   columns: TableColumn<T>[];
   rows: T[];
@@ -49,9 +54,25 @@ export interface TableProps<T> {
 const pad = { default: 'px-4 py-4', compact: 'px-3 py-2' } as const;
 
 export function Table<T>({
-  caption, hideCaption = false, columns, rows, getRowId, density = 'default', defaultSort, emptyState = 'Nothing here yet.', className,
+  caption, frameLabel, hideCaption = false, columns, rows, getRowId, density = 'default', defaultSort, emptyState = 'Nothing here yet.', className,
 }: TableProps<T>) {
   const captionId = useId();
+  // The frame becomes a scrollable region only when the table is wider than it.
+  const frameRef = useRef<HTMLDivElement | null>(null);
+  const [overflows, setOverflows] = useState(false);
+  const measure = useCallback(() => {
+    const el = frameRef.current;
+    if (el) setOverflows(el.scrollWidth > el.clientWidth + 1);
+  }, []);
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el) return;
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    if (el.firstElementChild) ro.observe(el.firstElementChild);
+    return () => ro.disconnect();
+  }, [measure]);
   const [sort, setSort] = useState(defaultSort);
 
   const sorted = useMemo(() => {
@@ -72,9 +93,10 @@ export function Table<T>({
 
   return (
     <div
-      role="region"
-      aria-labelledby={captionId}
-      tabIndex={0}
+      ref={frameRef}
+      role={overflows ? 'region' : undefined}
+      aria-label={overflows ? frameLabel ?? `${caption} (scrolls sideways)` : undefined}
+      tabIndex={overflows ? 0 : undefined}
       className={['overflow-x-auto rounded-container border border-subtle bg-surface outline-none focus-visible:shadow-focus', className].filter(Boolean).join(' ')}
     >
       <table className="w-full border-collapse text-left">

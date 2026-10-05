@@ -40,6 +40,7 @@ Published at **https://ds.valerianyman.com** with Cloudflare Pages, connected to
 - Build command: `npm run build-storybook`
 - Output directory: `storybook-static`
 - Node: 22 (from `.node-version`)
+- Link preview: `public/og.png` (1200 × 630), referenced in `.storybook/manager-head.html`
 - Custom domain: `ds.valerianyman.com` (DNS on Cloudflare, so Pages adds the CNAME itself)
 
 Every push to `main` rebuilds the site; pull requests get preview URLs.

@@ -1,0 +1,64 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+import * as Stories from './Banner.stories';
+import { ContrastTable } from '../../foundations/contrast';
+
+<Meta of={Stories} />
+
+# Banner
+
+A status message inside the page, placed above the content it is about. It informs; it does not promote. The lime "Highlight banner" on marketing pages is a different thing.
+
+<Source language="tsx" code={`import { Banner } from 'agentproof-ds/Banner'`} dark={false} />
+
+<Canvas of={Stories.AllStatuses} />
+
+## Anatomy
+
+| Element | Description |
+|---|---|
+| **Icon** | Set by `status`. Decorative: the title says the status in words. |
+| **Title** | Required. Starts with the point: "Payment sent". |
+| **Body** | One or two sentences: what it means and what to do. |
+| **Action** | Optional, one. A link-style Button or a link. |
+| **Dismiss** | Optional. Only when the message isn't needed again. |
+
+## Best practices
+
+| | Guidance |
+|---|---|
+| ✅ Do | Pick the status by consequence: `error` blocks the task, `warning` will block it later, `success` confirms, `info` explains. |
+| ✅ Do | Leave `live` off for banners that are on the page when it loads. They are read in order. |
+| ✅ Do | Use `live="polite"` for a result that appears after an action, `live="assertive"` only for an error that stops the current task. |
+| ❌ Don't | Stack several banners. Merge them, or keep the most severe. |
+| ❌ Don't | Use a banner for form field errors. Put those on the field. |
+
+## Examples
+
+### With an action
+<Canvas of={Stories.WithAction} />
+
+### Dismissible
+<Canvas of={Stories.Dismissible} />
+
+### Error after an action
+<Canvas of={Stories.LiveError} />
+
+## Properties
+
+<Controls of={Stories.Info} />
+
+**Figma:** `Banner` set, wave 2 (`Status=Info|Success|Warning|Error`, `Action`, `Dismiss`).
+
+## Accessibility
+
+<ContrastTable rows={[
+  { label: 'Info title', fg: 'text/info', bg: 'background/info', need: 4.5, criterion: '1.4.3' },
+  { label: 'Success title', fg: 'text/success', bg: 'background/success', need: 4.5, criterion: '1.4.3' },
+  { label: 'Warning title', fg: 'text/warning', bg: 'background/warning', need: 4.5, criterion: '1.4.3' },
+  { label: 'Error title', fg: 'text/error', bg: 'background/error', need: 4.5, criterion: '1.4.3' },
+  { label: 'Body on warning', fg: 'text/primary', bg: 'background/warning', need: 4.5, criterion: '1.4.3' },
+]} />
+
+- The status is in the title text and the icon shape, never in the colour alone (1.4.1).
+- `live="assertive"` renders `role="alert"`, `live="polite"` renders `role="status"`. A polite banner is announced most reliably when it appears inside an area that was already on the page.
+- The dismiss button needs a specific name when there are several banners: `dismissLabel="Dismiss: New pay-out option"`.

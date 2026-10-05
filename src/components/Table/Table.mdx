@@ -34,6 +34,9 @@ Rows of records with the same fields, to compare or scan. Built from data: give 
 ### Empty
 <Canvas of={Stories.Empty} />
 
+### Inside a section with the same heading
+<Canvas of={Stories.InASection} />
+
 ## Properties
 
 <Controls of={Stories.Default} />
@@ -50,4 +53,4 @@ Rows of records with the same fields, to compare or scan. Built from data: give 
 
 - A real `<table>`: column headers (`scope="col"`) and a row header (`scope="row"`), so cells are read with their headers.
 - Sortable headers are buttons; the sorted column has `aria-sort`, and a polite status says "Sorted by Bonus, descending".
-- On narrow screens the table scrolls inside a frame that is focusable (`tabindex="0"`) and named by the caption, so keyboard users can scroll it (2.1.1).
+- On narrow screens the table scrolls inside a frame. Only while it overflows, the frame is a focusable region (`tabindex="0"`) named "{caption} (scrolls sideways)", so keyboard users can scroll it (2.1.1). When the table fits, there is no extra landmark, so a section with the same heading doesn't clash (`landmark-unique`). Override the name with `frameLabel`.

@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/* Page defaults come from semantic tokens only. */
+@layer base {
+  body { background: var(--color-background-surface); color: var(--color-text-primary); font-family: var(--font-body); }
+}

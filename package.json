@@ -1,0 +1,37 @@
+{
+  "name": "agentproof-ds",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Reference implementation of the Agentproof design system (generated tokens + React components + Storybook).",
+  "type": "module",
+  "scripts": {
+    "tokens": "node scripts/build-tokens.mjs",
+    "storybook": "npm run tokens && storybook dev -p 6006 --no-open",
+    "build-storybook": "npm run tokens && storybook build -o storybook-static",
+    "typecheck": "tsc --noEmit",
+    "test:stories": "storybook build -o storybook-static --quiet && node scripts/check-stories.mjs"
+  },
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@fontsource/geist-mono": "^5.3.0",
+    "@fontsource/host-grotesk": "^5.3.0",
+    "@fontsource/manrope": "^5.3.0",
+    "@fontsource/outfit": "^5.3.0",
+    "@storybook/addon-a11y": "^10.6.1",
+    "@storybook/addon-docs": "^10.6.1",
+    "@storybook/react-vite": "^10.6.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "playwright": "^1.63.0",
+    "storybook": "^10.6.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2"
+  }
+}

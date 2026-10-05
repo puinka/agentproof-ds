@@ -1,0 +1,94 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+import * as Stories from './Button.stories';
+import { ContrastTable } from '../../foundations/contrast';
+
+<Meta of={Stories} />
+
+# Button
+
+Triggers an action. Use it to submit a form, confirm a step or start a task. If it only takes the user to another page, it is a link, not a button.
+
+<Source language="tsx" code={`import { Button } from 'agentproof-ds/Button'`} dark={false} />
+
+<Canvas of={Stories.Primary} />
+
+## Anatomy
+
+| Element | Description |
+|---|---|
+| **Label** | Required. The visible text and the accessible name. A verb that names the action. |
+| **Icon** | Optional, leading. Reinforces the label (trash on Delete). Takes the label's colour. |
+| **Spinner** | Replaces the icon while `isLoading`. |
+
+## Best practices
+
+| | Guidance |
+|---|---|
+| ✅ Do | Use one `primary` per view. Everything else is `ghost` or `link`. (B-R1) |
+| ✅ Do | Write labels that say what happens: "Save changes", "Delete account". Not "OK". (B-R2) |
+| ✅ Do | Use `tone="destructive"` for irreversible actions: filled on the final confirmation step, `ghost` when deleting is one of several actions. (B-R4) |
+| ✅ Do | Keep a submit button focusable when the form isn't ready: `isDisabled` uses `aria-disabled`, and the form says what is missing. (B-R6) |
+| ✅ Do | Use `onDark` on `background/inverse`, `background/accent` and `background/accent-strong` only. (B-R8) |
+| ❌ Don't | Use `size="sm"` outside dense rows (tables, lists, cards). (B-R5) |
+| ❌ Don't | Make a destructive button icon-only. (B-R9) |
+| ❌ Don't | Use a button for navigation. Use a link. |
+
+## Examples
+
+### Variants
+<Canvas of={Stories.Matrix} />
+
+### Destructive, final confirmation
+<Canvas of={Stories.Destructive} />
+
+### Destructive, one of several actions
+<Canvas of={Stories.DestructiveGhost} />
+
+### Disabled until the form can be sent
+<Canvas of={Stories.Disabled} />
+
+### Loading
+<Canvas of={Stories.Loading} />
+
+### On dark background
+<Canvas of={Stories.OnDark} />
+
+## Properties
+
+<Controls of={Stories.Primary} />
+
+### Mapping to Figma
+
+| Figma (`Button` set) | Code |
+|---|---|
+| `Type=Primary\|Ghost\|Link` | `variant="primary\|ghost\|link"` |
+| `Tone=Default\|Destructive` | `tone` |
+| `Size=L\|S` | `size="lg\|sm"` |
+| `State=White` | `onDark` (appearance, not a state) |
+| `State=Hover\|Focus` | CSS `:hover`, `:focus-visible` |
+| `State=Disabled` | `isDisabled` (`aria-disabled`) |
+| `Leading icon` + `Icon` | `icon` |
+| `Border radius` | removed: decided by `variant` |
+| — | `isLoading` (not in Figma yet) |
+
+## Accessibility
+
+Contrast is computed live from the token export (`tokens/figma-variables.json`), measured as the colours appear together. Change a token in Figma, re-export, and this table updates.
+
+<ContrastTable rows={[
+  { label: 'Label, primary', fg: 'text/inverse', bg: 'background/action', need: 4.5, criterion: '1.4.3' },
+  { label: 'Label, primary hover', fg: 'text/inverse', bg: 'background/action-hover', need: 4.5, criterion: '1.4.3' },
+  { label: 'Label, destructive', fg: 'text/inverse', bg: 'background/danger-solid', need: 4.5, criterion: '1.4.3' },
+  { label: 'Label, destructive hover', fg: 'text/inverse', bg: 'background/danger-solid-hover', need: 4.5, criterion: '1.4.3' },
+  { label: 'Label, ghost', fg: 'text/accent', bg: 'background/surface', need: 4.5, criterion: '1.4.3' },
+  { label: 'Label, ghost hover', fg: 'text/accent-hover', bg: 'background/accent-subtle', need: 4.5, criterion: '1.4.3' },
+  { label: 'Label, destructive ghost hover', fg: 'text/danger', bg: 'background/danger', need: 4.5, criterion: '1.4.3' },
+  { label: 'Ghost outline', fg: 'border/accent', bg: 'background/surface', need: 3, criterion: '1.4.11' },
+  { label: 'Destructive ghost outline', fg: 'border/danger', bg: 'background/surface', need: 3, criterion: '1.4.11' },
+  { label: 'Focus ring', fg: 'focus-ring', bg: 'background/surface', need: 3, criterion: '1.4.11, 2.4.7' },
+  { label: 'Disabled', fg: 'text/disabled', bg: 'background/disabled-strong', need: null, criterion: '1.4.3' },
+]} />
+
+- Keyboard: Tab focuses, Enter and Space activate. A disabled button stays in the tab order and is announced as unavailable.
+- Focus keeps the ghost outline and its transparent fill. The Figma `Ghost / Focus` variant fills with `background/accent-muted`, where the label drops to 3.8:1; the code does not copy that (spec B6).
+- Target size: `lg` is 48 px high (`size/control-lg`, same as inputs), `sm` 40 px (WCAG 2.5.8 needs 24 px).

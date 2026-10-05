@@ -1,0 +1,59 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+import * as Stories from './Dialog.stories';
+import { ContrastTable } from '../../foundations/contrast';
+
+<Meta of={Stories} />
+
+# Dialog
+
+Asks for a decision or a short input without leaving the page. The page behind is blocked until the user answers.
+
+<Source language="tsx" code={`import { Dialog } from 'agentproof-ds/Dialog'`} dark={false} />
+
+<Canvas of={Stories.ConfirmDestructive} />
+
+## Anatomy
+
+| Element | Description |
+|---|---|
+| **Title** | Required. The question or the task, in a few words. The dialog's accessible name. |
+| **Description** | What happens, and what can't be undone. The dialog's accessible description. |
+| **Content** | Optional fields or a short summary. |
+| **Actions** | The safe answer (ghost, closes) and the primary answer (a verb). Right-aligned; stacked full width on phones, primary on top. |
+| **Close** | Icon button, top right. Hide it only when the secondary action already says "Close". |
+
+## Best practices
+
+| | Guidance |
+|---|---|
+| ✅ Do | Ask one question. Answer it with the buttons: "Withdraw application" / "Keep application". Not "OK" / "Cancel". |
+| ✅ Do | Use `tone="destructive"` when the primary action deletes or withdraws. Focus then starts on the safe action and a backdrop click does nothing. |
+| ✅ Do | Use `onSubmit` for a short form: Enter submits, and the first field gets focus. |
+| ❌ Don't | Open a dialog on page load, or for news and status messages. Use a Banner. |
+| ❌ Don't | Put a long form or a second dialog inside. Use a page. |
+
+## Examples
+
+### Information
+<Canvas of={Stories.Info} />
+
+### Short form
+<Canvas of={Stories.WithForm} />
+
+## Properties
+
+<Controls of={Stories.ConfirmDestructive} />
+
+**Figma:** `Dialog` set, wave 2 (`Tone=Default|Destructive`, `Size=S|M`, `Close=On|Off`).
+
+## Accessibility
+
+<ContrastTable rows={[
+  { label: 'Title', fg: 'text/primary', bg: 'background/surface', need: 4.5, criterion: '1.4.3' },
+  { label: 'Description', fg: 'text/secondary', bg: 'background/surface', need: 4.5, criterion: '1.4.3' },
+  { label: 'Focus ring', fg: 'focus-ring', bg: 'background/surface', need: 3, criterion: '1.4.11, 2.4.7' },
+]} />
+
+- Native `<dialog>` with `showModal()`: the page behind is inert, focus stays inside, Esc closes.
+- Focus starts on the safe action (destructive), the first field (form) or the primary action, and returns to the opener on close.
+- Named by the title (`aria-labelledby`), described by the description (`aria-describedby`).

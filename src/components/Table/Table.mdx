@@ -1,0 +1,53 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+import * as Stories from './Table.stories';
+import { ContrastTable } from '../../foundations/contrast';
+
+<Meta of={Stories} />
+
+# Table
+
+Rows of records with the same fields, to compare or scan. Built from data: give it columns and rows.
+
+<Source language="tsx" code={`import { Table } from 'agentproof-ds/Table'`} dark={false} />
+
+<Canvas of={Stories.Default} />
+
+## Best practices
+
+| | Guidance |
+|---|---|
+| ✅ Do | Give every table a caption, even a hidden one. It names the table and its scroll frame. |
+| ✅ Do | Mark the column that names the row with `isRowHeader`. |
+| ✅ Do | Align numbers, amounts and dates to the end. They get tabular figures. |
+| ✅ Do | Show status with a Badge (word + icon), not a coloured dot. |
+| ❌ Don't | Make whole rows clickable. Put a link or a small Button in a cell, with a name that says which row. |
+| ❌ Don't | Use a table for layout or for fewer than three rows on a phone. Use a list of Cards. |
+
+## Examples
+
+### Sorting
+<Canvas of={Stories.Sortable} />
+
+### Compact
+<Canvas of={Stories.Compact} />
+
+### Empty
+<Canvas of={Stories.Empty} />
+
+## Properties
+
+<Controls of={Stories.Default} />
+
+**Figma:** `Table` set, wave 2: `Table / Header cell` (`Sort=None|Ascending|Descending`, `Align`), `Table / Cell` (`Type=Text|Number|Badge|Action`, `Density`).
+
+## Accessibility
+
+<ContrastTable rows={[
+  { label: 'Header text', fg: 'text/secondary', bg: 'background/subtle', need: 4.5, criterion: '1.4.3' },
+  { label: 'Cell text', fg: 'text/primary', bg: 'background/surface', need: 4.5, criterion: '1.4.3' },
+  { label: 'Empty state', fg: 'text/tertiary', bg: 'background/surface', need: 4.5, criterion: '1.4.3' },
+]} />
+
+- A real `<table>`: column headers (`scope="col"`) and a row header (`scope="row"`), so cells are read with their headers.
+- Sortable headers are buttons; the sorted column has `aria-sort`, and a polite status says "Sorted by Bonus, descending".
+- On narrow screens the table scrolls inside a frame that is focusable (`tabindex="0"`) and named by the caption, so keyboard users can scroll it (2.1.1).

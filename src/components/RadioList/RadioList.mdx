@@ -1,0 +1,53 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+import * as Stories from './RadioList.stories';
+import { ContrastTable } from '../../foundations/contrast';
+
+<Meta of={Stories} />
+
+# Radio list
+
+One choice from two to six options, all visible at once. `layout="tiles"` turns each option into a card for choices that need a description or a value to compare.
+
+<Source language="tsx" code={`import { RadioList } from 'agentproof-ds/RadioList'`} dark={false} />
+
+<Canvas of={Stories.Tiles} />
+
+## Best practices
+
+| | Guidance |
+|---|---|
+| ✅ Do | Write the legend as the question: "How do you want to be paid?" |
+| ✅ Do | Preselect the option most people choose, unless the choice has a cost or a legal effect. |
+| ✅ Do | Use tiles when options carry a price, a date or a trade-off. Keep the value in `meta`, right-aligned. |
+| ❌ Don't | Use it for more than six options (use a select) or for yes/no (use a Checkbox or Switch). |
+| ❌ Don't | Change the page as soon as an option is chosen. The choice is applied with the form. |
+
+## Examples
+
+### List
+<Canvas of={Stories.List} />
+
+### Error
+<Canvas of={Stories.WithError} />
+
+### Disabled option
+<Canvas of={Stories.DisabledOption} />
+
+## Properties
+
+<Controls of={Stories.List} />
+
+**Figma:** `Radio` and `Option tile` sets, wave 2 (`Selected=True|False`, `State=Default|Hover|Focus|Disabled|Error`).
+
+## Accessibility
+
+<ContrastTable rows={[
+  { label: 'Radio outline', fg: 'border/control', bg: 'background/surface', need: 3, criterion: '1.4.11' },
+  { label: 'Selected tile border', fg: 'border/accent', bg: 'background/surface', need: 3, criterion: '1.4.11' },
+  { label: 'Tile description', fg: 'text/tertiary', bg: 'background/surface', need: 4.5, criterion: '1.4.3' },
+  { label: 'Focus ring', fg: 'focus-ring', bg: 'background/surface', need: 3, criterion: '1.4.11, 2.4.7' },
+]} />
+
+- Native radios in a `fieldset` with `role="radiogroup"`; the legend names it. Tab enters the group, arrow keys change the choice.
+- The selected state is shown by the dot and by a 2 px border, not only by colour.
+- An error sets `aria-invalid` on the group and is read with it (`aria-describedby`).

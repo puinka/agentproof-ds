@@ -17,6 +17,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const src = JSON.parse(readFileSync(join(root, 'tokens/figma-variables.json'), 'utf8'));
+// Code-first tokens waiting to be created in Figma (see the file's _note). Kept separate so the export stays a pure Figma copy.
+const pending = JSON.parse(readFileSync(join(root, 'tokens/pending-figma.json'), 'utf8'));
 const out = join(root, 'src/styles/tokens.css');
 
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -110,6 +112,17 @@ for (const [n] of sizes) {
   lines.push(`@utility h-${k} { height: var(--size-${k}); }`);
   lines.push(`@utility min-h-${k} { min-height: var(--size-${k}); }`);
   lines.push(`@utility size-${k} { width: var(--size-${k}); height: var(--size-${k}); }`);
+}
+// Content widths (pending in Figma): max-w-content-narrow, max-w-content-default.
+if (pending.sizes.length) {
+  lines.push('/* Pending in Figma: tokens/pending-figma.json */', ':root {');
+  for (const [n, v, use] of pending.sizes) lines.push(`  --${n.replace('/', '-')}: ${px(v)}; /* ${use} */`);
+  lines.push('}');
+  for (const [n] of pending.sizes) {
+    const k = n.split('/')[1];
+    lines.push(`@utility max-w-${k} { max-width: var(--size-${k}); }`);
+  }
+  console.warn(`⚠ ${pending.sizes.length} token(s) exist only in code (tokens/pending-figma.json): ${pending.sizes.map(([n]) => n).join(', ')}`);
 }
 lines.push('');
 

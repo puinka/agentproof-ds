@@ -1,0 +1,57 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+import * as Stories from './Page.stories';
+
+<Meta of={Stories} />
+
+# Page
+
+The frame of one product page: eyebrow, title, description, actions, page notices, then the content, at one of two content widths. Added after build-run D, where 16 agent-built screens picked four different widths by hand (640, 720, 800 and 880 px) and two weights for the same title.
+
+<Source language="tsx" code={`import { Page } from 'agentproof-ds/Page'`} dark={false} />
+
+<Canvas of={Stories.WithNotice} />
+
+## Widths
+
+| `width` | Token | Value | For |
+|---|---|---|---|
+| `default` | `size/content-default` | 880 | lists, tables, overview pages |
+| `narrow` | `size/content-narrow` | 640 | one task: an upload, a short form, settings |
+
+Outside `Page`, use the same tokens as classes: `max-w-content-default`, `max-w-content-narrow`. They are code-first for now and will be added to Figma's `Semantic / Size` collection.
+
+<Canvas of={Stories.Narrow} />
+
+## Anatomy
+
+| Element | Description |
+|---|---|
+| **Eyebrow** | Optional. Where in the product: "Account", "Vehicle VW-204-E". |
+| **Title** | Required. The page's only h1, `Desktop/Header/Small/Default`. Sections inside use h2. |
+| **Description** | Optional. One or two sentences: what this page is for. |
+| **Actions** | Optional. Right of the title on wide screens, under it on phones. One primary at most. |
+| **Notices** | Optional. Banners about the whole page. |
+
+## Best practices
+
+| | Guidance |
+|---|---|
+| ✅ Do | Pick the width by the job, not by the content's natural size. |
+| ✅ Do | Put Banners about the whole page in `notices`, and a problem with one field or file on that field. |
+| ✅ Do | Pass `titleRef` and focus the title when the element that had focus disappears. |
+| ❌ Don't | Set your own `max-w-[…]` on a page. Two widths are the system. |
+| ❌ Don't | Change the title weight or size per page. |
+| ❌ Don't | Wrap `Page` in `<main>` inside a component: the app shell owns the landmark. |
+
+## Focus after a removal
+<Canvas of={Stories.FocusAfterRemoval} />
+
+## Properties
+
+<Controls of={Stories.Default} />
+
+## Accessibility
+
+- One h1 per page, always the title. The title has `tabIndex={-1}`: it can receive focus from script but is not a tab stop.
+- `Page` renders no landmark. Put it inside the app's `<main>`.
+- A result that appears in `notices` after an action needs a live region that was already on the page (see Banner `live`).

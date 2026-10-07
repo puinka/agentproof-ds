@@ -1,0 +1,63 @@
+import { Meta, Canvas, Controls, Source } from '@storybook/addon-docs/blocks';
+import * as Stories from './FileUpload.stories';
+
+<Meta of={Stories} />
+
+# FileUpload
+
+One file the user sends us: a photo of a document, a PDF. Buttons to choose a file or take a photo, a drop area, then a file row with the upload status. Added after build-run D, where all six agents built a hidden file input by hand for the same screen.
+
+<Source language="tsx" code={`import { FileUpload } from 'agentproof-ds/FileUpload'`} dark={false} />
+
+<Canvas of={Stories.NotAccepted} />
+
+## Anatomy
+
+| Element | Description |
+|---|---|
+| **Label** | Required. Names the document: "Registration certificate". Also names the group. |
+| **Description** | What we need and the accepted formats and size: "Front of Part I. JPG, PNG or PDF, up to 10 MB." |
+| **Drop area** | Shown while there is no file. Dashed border; accent while a file is dragged over it. |
+| **Choose file / Take a photo** | Ghost `sm` buttons. "Take a photo" appears with `capture` and opens the rear camera on phones. |
+| **File row** | Thumbnail or document icon, name, size, status Badge ("Uploading", "Uploaded", "Not accepted"), "Replace file", "Remove". |
+| **Error** | Under the control, with an icon. Says what happened and what to do. |
+
+## Best practices
+
+| | Guidance |
+|---|---|
+| ✅ Do | Show a failed upload as `status="error"` on this control, with the reason and the fix: "It’s too dark. Take it again in daylight." |
+| ✅ Do | Put the formats and size limit in `description`, before the user picks a file. |
+| ✅ Do | Use `capture` when the document is usually photographed (certificates, IDs). |
+| ❌ Don't | Report a rejected file in a page Banner. The problem is with this file, so it goes here. |
+| ❌ Don't | Use `warning` for a file we couldn't accept. It blocks the task: that is an error. |
+| ❌ Don't | Build your own `<input type="file">`. Type and size checks, focus and announcements live here. |
+
+## Examples
+
+### Empty
+<Canvas of={Stories.Empty} />
+
+### Uploaded
+<Canvas of={Stories.Done} />
+
+### File too large (checked before upload)
+<Canvas of={Stories.TooLarge} />
+
+### Choose, upload, remove
+<Canvas of={Stories.Interactive} />
+
+## Properties
+
+<Controls of={Stories.Empty} />
+
+**Figma:** not yet. Code-first; the Figma component follows (see `tokens/pending-figma.json` for the same status on tokens).
+
+## Accessibility
+
+- The buttons are the controls. The native inputs are hidden from assistive tech and the tab order, so there is one tab stop per action.
+- The description and, when present, the error are attached to every button with `aria-describedby`: a screen reader hears the reason on "Take a new photo".
+- An error appears as `role="alert"`, so it is announced when it shows up after an action. "Uploading…" and "… uploaded" are announced politely.
+- Type and size are checked for picked and dropped files; a dropped file skips the picker's filter.
+- After "Remove", focus moves to "Choose file" instead of falling to the start of the page.
+- Status is in words (Badge label and error text), never in the border colour alone (1.4.1).

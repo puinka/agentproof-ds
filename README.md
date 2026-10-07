@@ -45,12 +45,17 @@ Published at **https://ds.valerianyman.com** with Cloudflare Pages, connected to
 
 Every push to `main` rebuilds the site; pull requests get preview URLs.
 
-## Status (2026-10-05)
+## Status (2026-10-07)
 - Brand refresh: cobalt + lime accent on ink neutrals, Host Grotesk + Geist Mono, radii 4/8, iso grid (see `rebrand/2026-10-05-decision.md`
   and `Foundations/Brand refresh`). `tokens/figma-variables.json` matches the live Figma file (fingerprints in its `_source`).
 - Foundations: Colors (text, background, border), Brand refresh (before / after).
-- Components: Button, Field + TextInput, Checkbox, Switch, RadioList, Badge, Banner, Dialog, Table, Filter chip, Stepper, Card; Iso grid;
-  patterns: Site header, Flow diagram (84 stories, all passing).
+- Components: Button, Field + TextInput, Checkbox, Switch, RadioList, Badge, Banner, Dialog, Table, FileUpload, Filter chip, Stepper, Card, Page; Iso grid;
+  patterns: Site header, Flow diagram (101 stories, all passing).
 - Wave 2 (2026-10-05): Dialog (native `<dialog>`), Banner (status message), RadioList (list and tiles), Table (caption,
   row headers, sorting, scroll frame). Matching Figma sets on the Components page, section «Wave 2 (2026-10-05)».
+- From build-run D (2026-10-07): `Page` with two content widths, `size/content-narrow` (640) and `size/content-default` (880);
+  `FileUpload` (choose, take a photo, drop, file row, status, error); icons `arrow-up-tray`, `camera`, `document`;
+  Table frame is a named region only while it overflows. **Code-first, not in Figma yet:** the two content-width tokens live in
+  `tokens/pending-figma.json` (the token build warns while it has entries), and FileUpload / Page / the three icons have no Figma
+  component yet.
 - Next: templates rebuilt on these components.

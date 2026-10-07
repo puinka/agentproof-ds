@@ -56,9 +56,8 @@ Every push to `main` rebuilds the site; pull requests get preview URLs.
   row headers, sorting, scroll frame). Matching Figma sets on the Components page, section «Wave 2 (2026-10-05)».
 - From build-run D (2026-10-07): `Page` with two content widths, `size/content-narrow` (640) and `size/content-default` (880);
   `FileUpload` (choose, take a photo, drop, file row, status, error); icons `arrow-up-tray`, `camera`, `document`;
-  Table frame is a named region only while it overflows. **Code-first, not in Figma yet:** the two content-width tokens live in
-  `tokens/pending-figma.json` (the token build warns while it has entries), and FileUpload / Page / the three icons have no Figma
-  component yet.
+  Table frame is a named region only while it overflows. Synced to Figma on 2026-10-07: `size/content-*` variables, `FileUpload` and `Page` sets (section «Wave 3»), the three icons;
+  `tokens/pending-figma.json` is empty again (the token build warns whenever it has entries).
 - Errors and announcements (2026-10-07): field messages (Field, RadioList, Checkbox) sit in a live region that is always on the
   page, so an error after submit is announced; `Form` moves focus to the first invalid control; `BannerRegion` (and Page
   `notices`) for Banners that appear after an action.

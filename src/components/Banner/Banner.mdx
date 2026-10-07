@@ -28,9 +28,23 @@ A status message inside the page, placed above the content it is about. It infor
 |---|---|
 | ✅ Do | Pick the status by consequence: `error` blocks the task, `warning` will block it later, `success` confirms, `info` explains. |
 | ✅ Do | Leave `live` off for banners that are on the page when it loads. They are read in order. |
-| ✅ Do | Use `live="polite"` for a result that appears after an action, `live="assertive"` only for an error that stops the current task. |
+| ✅ Do | Put a Banner that appears after the user's action inside a region that is already on the page: Page `notices`, or `BannerRegion`. See the table below. |
+| ✅ Do | Use `live="assertive"` only for an error that stops the current task and isn't about one field. |
 | ❌ Don't | Stack several banners. Merge them, or keep the most severe. |
-| ❌ Don't | Use a banner for form field errors. Put those on the field. |
+| ❌ Don't | Use a banner for form field errors or a rejected file. Put those on the field or on FileUpload. |
+
+## When is a Banner announced?
+
+| The Banner… | Example | Do this |
+|---|---|---|
+| is on the page when it loads | "The 2026 quota year closes on 28 February" | nothing: `live` off, it is read in order |
+| appears as the result of the user's action | "Payout choice saved", "KL-880-E removed" | render it inside Page `notices` or a `BannerRegion` that is always rendered |
+| reports an error that stops the task, not tied to one field | "We couldn’t send your application" | `live="assertive"` (renders `role="alert"`) |
+| is about one field or one file | "The photo is too dark" | not a Banner: the field's or FileUpload's own error, which is announced already |
+
+Why the region: screen readers announce what is added to a live region that already exists. A Banner with `live="polite"` that mounts together with its own region is often missed (build-run D: 2 of 6 agent screens).
+
+<Canvas of={Stories.ResultOfAnAction} />
 
 ## Examples
 
@@ -60,5 +74,5 @@ A status message inside the page, placed above the content it is about. It infor
 ]} />
 
 - The status is in the title text and the icon shape, never in the colour alone (1.4.1).
-- `live="assertive"` renders `role="alert"`, `live="polite"` renders `role="status"`. A polite banner is announced most reliably when it appears inside an area that was already on the page.
+- `live="assertive"` renders `role="alert"`, `live="polite"` renders `role="status"`. For a result of an action, prefer `BannerRegion` / Page `notices`: the region exists before the message, which is what screen readers need.
 - The dismiss button needs a specific name when there are several banners: `dismissLabel="Dismiss: New pay-out option"`.

@@ -1,5 +1,5 @@
 import { createContext, useContext, useId, type ReactNode } from 'react';
-import { Icon, type IconName } from '../../icons/Icon';
+import { ValidationMessage } from './ValidationMessage';
 
 export type FieldStatus = 'none' | 'error' | 'warning' | 'success';
 
@@ -34,12 +34,6 @@ export interface FieldProps {
   className?: string;
 }
 
-const statusUi: Record<Exclude<FieldStatus, 'none'>, { icon: IconName; text: string }> = {
-  error: { icon: 'exclamation-circle', text: 'text-error' },
-  warning: { icon: 'exclamation-triangle', text: 'text-warning' },
-  success: { icon: 'check-circle', text: 'text-success' },
-};
-
 /**
  * Figma: `Field` (`Status=None|Error|Warning|Success`, `Label`, `Optional`, `Description`, `Message`).
  * Owns label, description and status message for any control, as in Astryx. Replaces `Input&Label`.
@@ -63,7 +57,6 @@ export function Field({
     console.warn(`[Field] status="${status}" needs a message.`);
   }
   const describedBy = [descId, msgId].filter(Boolean).join(' ') || undefined;
-  const ui = status !== 'none' ? statusUi[status] : null;
   return (
     <FieldContext.Provider value={{ inputId, describedBy, status, isRequired, isDisabled }}>
       <div className={['flex flex-col gap-2', className].filter(Boolean).join(' ')}>
@@ -77,12 +70,7 @@ export function Field({
             {description}
           </p>
         )}
-        {ui && message && (
-          <p id={msgId} className={`flex items-start gap-1.5 type-desktop-body-caption-default ${ui.text}`}>
-            <Icon name={ui.icon} size={20} className="shrink-0" />
-            <span>{message}</span>
-          </p>
-        )}
+        <ValidationMessage id={msgId} status={status === 'none' ? undefined : status}>{status !== 'none' ? message : null}</ValidationMessage>
       </div>
     </FieldContext.Provider>
   );

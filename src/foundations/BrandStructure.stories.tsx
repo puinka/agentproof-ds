@@ -58,7 +58,7 @@ function CalculatorBar() {
   const types = ['Car', 'Van', 'Bus', 'Motorbike'] as const;
   const [type, setType] = useState<(typeof types)[number]>('Car');
   return (
-    <div className="w-full max-w-[640px] rounded-container border border-subtle bg-surface p-2 shadow-sm text-left">
+    <div className="w-full max-w-content-narrow rounded-container border border-subtle bg-surface p-2 shadow-sm text-left">
       <label className="flex items-center gap-3 px-3 py-3">
         <span className="sr-only">Number of vehicles</span>
         <span className="whitespace-nowrap type-desktop-body-caption-default text-tertiary">How many?</span>

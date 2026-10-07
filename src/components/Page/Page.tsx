@@ -1,4 +1,5 @@
 import { useId, type ReactNode, type Ref } from 'react';
+import { BannerRegion } from '../Banner/Banner';
 
 /**
  * Page: the frame of one product page. Title, optional eyebrow, description and actions, a slot for
@@ -11,8 +12,9 @@ import { useId, type ReactNode, type Ref } from 'react';
  * - The title is the page's only h1 (`Desktop/Header/Small/Default`). Sections inside use h2.
  * - `titleRef` lets you move focus to the title after the element that had focus disappears
  *   (e.g. the row you just removed). The title is focusable from script only (tabIndex −1).
- * - `notices` sits between the header and the content: Banners about the whole page. A problem with
- *   one field or one file belongs on that field, not here.
+ * - `notices` sits between the header and the content: Banners about the whole page. It is a live region
+ *   that is always on the page, so a Banner added after an action ("Saved") is announced without `live`.
+ *   A problem with one field or one file belongs on that field, not here.
  * - Page renders no landmark; the app shell owns <main>.
  */
 export interface PageProps {
@@ -47,7 +49,8 @@ export function Page({ title, eyebrow, description, actions, notices, width = 'd
         </div>
         {actions && <div className="flex shrink-0 flex-wrap gap-3">{actions}</div>}
       </header>
-      {notices && <div className="flex flex-col gap-3 empty:hidden">{notices}</div>}
+      {/* Always rendered: a Banner added here after an action is announced. */}
+      <BannerRegion>{notices}</BannerRegion>
       <div className="flex flex-col gap-8">{children}</div>
     </div>
   );

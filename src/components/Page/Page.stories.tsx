@@ -108,9 +108,7 @@ function Vehicles() {
       title="Your vehicles"
       titleRef={title}
       notices={
-        <div aria-live="polite" className="empty:hidden">
-          {removed && <Banner status="success" title={`${removed} removed from your account`}>Its open application for 2026 is withdrawn.</Banner>}
-        </div>
+        removed && <Banner status="success" title={`${removed} removed from your account`}>Its open application for 2026 is withdrawn.</Banner>
       }
     >
       <ul className="m-0 flex list-none flex-col gap-3 p-0">
@@ -143,7 +141,9 @@ export const FocusAfterRemoval: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
     await userEvent.click(c.getByRole('button', { name: 'Remove KL-880-E' }));
-    await expect(await c.findByText('KL-880-E removed from your account')).toBeInTheDocument();
+    const notice = await c.findByText('KL-880-E removed from your account');
+    // The notices slot is a live region that was on the page before the Banner: it gets announced.
+    await expect(notice.closest('[aria-live="polite"]')).not.toBeNull();
     await waitFor(() => expect(c.getByRole('heading', { level: 1, name: 'Your vehicles' })).toHaveFocus());
   },
 };

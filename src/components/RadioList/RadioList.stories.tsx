@@ -20,7 +20,7 @@ const meta = {
   tags: ['!autodocs'],
   parameters: { layout: 'padded' },
   args: { legend: 'Vehicle type', options: vehicles },
-  decorators: [(Story) => <div className="max-w-[640px]"><Story /></div>],
+  decorators: [(Story) => <div className="max-w-content-narrow"><Story /></div>],
 } satisfies Meta<typeof RadioList>;
 export default meta;
 type Story = StoryObj<typeof meta>;

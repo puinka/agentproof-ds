@@ -61,3 +61,17 @@ export function Banner({ status = 'info', title, children, action, onDismiss, di
     </div>
   );
 }
+
+/**
+ * BannerRegion: an always-present polite live region for Banners that appear after the user's action
+ * ("Payout choice saved", "KL-880-E removed"). Screen readers announce content added to a region that
+ * was already on the page; a Banner mounted on its own is often missed (build-run D: 2 of 6 agents).
+ * Render it unconditionally and put the conditional Banner inside. Page's `notices` slot is one.
+ */
+export function BannerRegion({ children, className }: { children?: ReactNode; className?: string }) {
+  return (
+    <div aria-live="polite" aria-relevant="additions text" className={['flex flex-col gap-3 empty:hidden', className].filter(Boolean).join(' ')}>
+      {children}
+    </div>
+  );
+}

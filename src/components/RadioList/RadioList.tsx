@@ -1,5 +1,5 @@
 import { useId, useState, type ReactNode } from 'react';
-import { Icon } from '../../icons/Icon';
+import { ValidationMessage } from '../Field/ValidationMessage';
 
 /**
  * RadioList: one choice from 2–6 options, all visible (closes design.md G14: single choice and the selected option tile).
@@ -9,6 +9,8 @@ import { Icon } from '../../icons/Icon';
  *   or a value (a price, a date) and should be compared side by side.
  * - Selected tile: `border/accent` 2 px on `background/surface`, plus the radio dot, so the state never
  *   depends on colour alone. No tinted fill: a grey fill reads as disabled.
+ * - `error` is announced when it appears (e.g. after an empty submit). Inside a `Form`, focus also moves
+ *   to the group's first option.
  * - More than 6 options → a select. Yes/no → a single Checkbox or Switch.
  */
 export interface RadioOption {
@@ -127,12 +129,8 @@ export function RadioList({
           );
         })}
       </div>
-      {error && (
-        <p id={errId} className="m-0 flex items-start gap-1.5 type-desktop-body-caption-default text-error">
-          <Icon name="exclamation-circle" size={20} className="shrink-0" />
-          <span>{error}</span>
-        </p>
-      )}
+      {/* Announced when it appears after a submit (live region), read in order when present on load. */}
+      <ValidationMessage id={errId}>{error}</ValidationMessage>
     </fieldset>
   );
 }

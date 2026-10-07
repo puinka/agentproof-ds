@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { Banner } from './Banner';
+import { Banner, BannerRegion } from './Banner';
 import { Button } from '../Button/Button';
 
 const meta = {
@@ -14,7 +14,7 @@ const meta = {
     title: 'The 2026 quota year closes on 28 February',
     children: 'Applications sent after that date go into the 2027 batch.',
   },
-  decorators: [(Story) => <div className="max-w-[640px]"><Story /></div>],
+  decorators: [(Story) => <div className="max-w-content-narrow"><Story /></div>],
 } satisfies Meta<typeof Banner>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -93,5 +93,30 @@ export const Static: Story = {
     const c = within(canvasElement);
     await expect(c.queryByRole('alert')).toBeNull();
     await expect(c.queryByRole('status')).toBeNull();
+  },
+};
+
+function SavedDemo() {
+  const [saved, setSaved] = useState(false);
+  return (
+    <div className="flex flex-col items-start gap-4">
+      {/* Rendered before anything happens; the Banner appears inside it. */}
+      <BannerRegion className="w-full">
+        {saved && <Banner status="success" title="Payout choice saved">We’ll pay your next bonus this way.</Banner>}
+      </BannerRegion>
+      <Button label="Save payout choice" onClick={() => setSaved(true)} />
+    </div>
+  );
+}
+/** The result of the user's action: a region that is already on the page, then the Banner inside it. */
+export const ResultOfAnAction: Story = {
+  name: 'Result of an action (BannerRegion)',
+  render: () => <SavedDemo />,
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    const region = canvasElement.querySelector('[aria-live="polite"]');
+    await expect(region).toBeEmptyDOMElement();
+    await userEvent.click(c.getByRole('button', { name: 'Save payout choice' }));
+    await expect(region).toHaveTextContent('Payout choice saved');
   },
 };

@@ -33,6 +33,7 @@ npm run storybook        # dev server on :6006
 npm run build-storybook  # static build in storybook-static/
 npm run typecheck
 npm run test:stories    # needs a static server on :6009 for storybook-static
+npm run lint:ds -- src/screens   # product code against the DS rules (after a build, to catch dead classes)
 ```
 
 ## Deploy
@@ -49,8 +50,8 @@ Every push to `main` rebuilds the site; pull requests get preview URLs.
 - Brand refresh: cobalt + lime accent on ink neutrals, Host Grotesk + Geist Mono, radii 4/8, iso grid (see `rebrand/2026-10-05-decision.md`
   and `Foundations/Brand refresh`). `tokens/figma-variables.json` matches the live Figma file (fingerprints in its `_source`).
 - Foundations: Colors (text, background, border), Brand refresh (before / after).
-- Components: Button, Field + TextInput, Checkbox, Switch, RadioList, Badge, Banner, Dialog, Table, FileUpload, Filter chip, Stepper, Card, Page; Iso grid;
-  patterns: Site header, Flow diagram (101 stories, all passing).
+- Components: Button, Field + TextInput, Checkbox, Switch, RadioList, Badge, Banner, Dialog, Table, FileUpload, Form, Filter chip, Stepper, Card, Page; Iso grid;
+  patterns: Site header, Flow diagram (105 stories, all passing).
 - Wave 2 (2026-10-05): Dialog (native `<dialog>`), Banner (status message), RadioList (list and tiles), Table (caption,
   row headers, sorting, scroll frame). Matching Figma sets on the Components page, section «Wave 2 (2026-10-05)».
 - From build-run D (2026-10-07): `Page` with two content widths, `size/content-narrow` (640) and `size/content-default` (880);
@@ -58,4 +59,9 @@ Every push to `main` rebuilds the site; pull requests get preview URLs.
   Table frame is a named region only while it overflows. **Code-first, not in Figma yet:** the two content-width tokens live in
   `tokens/pending-figma.json` (the token build warns while it has entries), and FileUpload / Page / the three icons have no Figma
   component yet.
+- Errors and announcements (2026-10-07): field messages (Field, RadioList, Checkbox) sit in a live region that is always on the
+  page, so an error after submit is announced; `Form` moves focus to the first invalid control; `BannerRegion` (and Page
+  `notices`) for Banners that appear after an action.
+- Guardrails for agents: `AGENTS.md` (what "done" means, what the system already has) and `npm run lint:ds` (raw colours,
+  inline styles, arbitrary values, dead classes, hand-built file input / dialog / table / radio / checkbox / button).
 - Next: templates rebuilt on these components.

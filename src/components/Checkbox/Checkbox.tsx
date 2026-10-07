@@ -1,4 +1,5 @@
 import { useCallback, useId, type InputHTMLAttributes } from 'react';
+import { ValidationMessage } from '../Field/ValidationMessage';
 import { Icon } from '../../icons/Icon';
 
 /**
@@ -68,12 +69,7 @@ export function Checkbox({ label, description, indeterminate = false, isDisabled
           {description && <span id={descId} className="type-desktop-body-caption-default text-tertiary">{description}</span>}
         </span>
       </div>
-      {error && (
-        <p id={errId} className="flex items-start gap-1.5 pl-11 type-desktop-body-caption-default text-error">
-          <Icon name="exclamation-circle" size={20} className="shrink-0" />
-          <span>{error}</span>
-        </p>
-      )}
+      <ValidationMessage id={errId} className="pl-11">{error}</ValidationMessage>
     </div>
   );
 }

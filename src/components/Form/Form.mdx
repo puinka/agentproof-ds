@@ -1,0 +1,43 @@
+import { Meta, Canvas, Source } from '@storybook/addon-docs/blocks';
+import * as Stories from './Form.stories';
+
+<Meta of={Stories} />
+
+# Form
+
+A `<form>` that does the one step every form forgets: after a submit that left errors, focus moves to the first invalid control. Added after build-run D, where five of six agent-built payout screens showed the right error after an empty submit, and nobody using a screen reader would have heard it.
+
+<Source language="tsx" code={`import { Form } from 'agentproof-ds/Form'`} dark={false} />
+
+<Canvas of={Stories.EmptySubmit} />
+
+## How errors work in this system
+
+| Where | What happens | Who does it |
+|---|---|---|
+| **On the control** | The message sits under the field, with an icon, and is attached with `aria-describedby`. | `Field`, `RadioList`, `Checkbox`, `FileUpload` |
+| **Announced** | Each control keeps an empty live region on the page; the message appears inside it, so it is read out when it shows up after an action. A message already there on load is read in order. | the control, automatically |
+| **Focus** | After submit, focus goes to the first `[aria-invalid="true"]`: the input itself, or the checked / first option of a group. | `Form` |
+| **Summary** | With more than one error, a Banner `status="error"` at the top lists them. With one, the field message is enough. | your page |
+
+## Best practices
+
+| | Guidance |
+|---|---|
+| ✅ Do | Validate in `onSubmit`, set `error` or `status="error"` on each control, and let Form move focus. |
+| ✅ Do | Write the message as what to do: "Choose how you want your next payout." |
+| ✅ Do | Clear a field's error as soon as the user fixes it. |
+| ❌ Don't | Show an empty-submit error only in a Banner. The problem belongs to a field. |
+| ❌ Don't | Disable the submit button until the form is valid. The user can't find out what is missing. |
+| ❌ Don't | Put `role="alert"` on every field message. Several alerts at once interrupt each other; the live region and the focus move do the job. |
+
+## Several fields
+<Canvas of={Stories.SeveralErrors} />
+
+## Accessibility
+
+- `noValidate` is always on: browser bubbles are replaced by the DS messages, which are in our words and stay on the page.
+- Focus doesn't move if the user is already inside an invalid control.
+- `focusFirstInvalid(form)` is exported for forms that can't use `Form` (for example, a form owned by a library).
+
+**Figma:** none. Form is behaviour only; the visible parts are Field, RadioList, Checkbox and Banner.

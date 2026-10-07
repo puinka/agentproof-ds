@@ -104,11 +104,16 @@ for (const [n] of semantic.filter(([n]) => n.startsWith('text/'))) {
 }
 // Role sizes (Figma `Semantic / Size`, aliases of the spacing scale): h-control-lg, min-h-target-min…
 lines.push(':root {');
-for (const [n, v] of sizes) lines.push(`  --${n.replace('/', '-')}: ${px(spacingPx.get(v.slice(1)))}; /* ${v.slice(1)} */`);
+// Most are aliases of the spacing scale; content widths are plain numbers (no spacing step is 640 or 880).
+for (const [n, v] of sizes) {
+  const isAlias = typeof v === 'string' && v.startsWith('@');
+  lines.push(`  --${n.replace('/', '-')}: ${px(isAlias ? spacingPx.get(v.slice(1)) : v)};${isAlias ? ` /* ${v.slice(1)} */` : ''}`);
+}
 lines.push('}');
 for (const [n] of sizes) {
   const k = n.split('/')[1];
   if (k.startsWith('iso-')) continue; // lattice cell sizes are read as CSS variables by IsoGrid, not used as box sizes
+  if (k.startsWith('content-')) { lines.push(`@utility max-w-${k} { max-width: var(--size-${k}); }`); continue; } // page widths
   lines.push(`@utility h-${k} { height: var(--size-${k}); }`);
   lines.push(`@utility min-h-${k} { min-height: var(--size-${k}); }`);
   lines.push(`@utility size-${k} { width: var(--size-${k}); height: var(--size-${k}); }`);

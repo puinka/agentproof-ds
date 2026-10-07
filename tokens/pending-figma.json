@@ -1,7 +1,4 @@
 {
-  "_note": "Code-first tokens that do not exist in Figma yet. build-tokens.mjs reads them and prints a warning. Create them in Figma (Semantic / Size, scope WIDTH_HEIGHT), re-export tokens/figma-variables.json, then delete the entries here. Added 2026-10-07 after build-run D (4 different hand-picked page widths across 16 screens).",
-  "sizes": [
-    ["size/content-narrow", 640, "single-task pages and forms: upload, settings, a short flow"],
-    ["size/content-default", 880, "lists, tables and overview pages"]
-  ]
+ "_note": "Code-first tokens that do not exist in Figma yet. build-tokens.mjs reads them and prints a warning. Create them in Figma (Semantic / Size, scope WIDTH_HEIGHT), re-export tokens/figma-variables.json, then delete the entries here. Added 2026-10-07 after build-run D (4 different hand-picked page widths across 16 screens). Emptied 2026-10-07: both content widths now exist in Figma (Semantic / Size).",
+ "sizes": []
 }

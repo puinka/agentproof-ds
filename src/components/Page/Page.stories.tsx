@@ -117,6 +117,7 @@ function Vehicles() {
             <span className="type-desktop-body-caption-strong text-primary">{p}</span>
             <Button
               variant="ghost"
+              tone="destructive"
               size="sm"
               label="Remove"
               aria-label={`Remove ${p}`}

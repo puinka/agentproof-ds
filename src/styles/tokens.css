@@ -346,6 +346,13 @@
 @utility h-target-min { height: var(--size-target-min); }
 @utility min-h-target-min { min-height: var(--size-target-min); }
 @utility size-target-min { width: var(--size-target-min); height: var(--size-target-min); }
+/* Pending in Figma: tokens/pending-figma.json */
+:root {
+  --size-content-narrow: 640px; /* single-task pages and forms: upload, settings, a short flow */
+  --size-content-default: 880px; /* lists, tables and overview pages */
+}
+@utility max-w-content-narrow { max-width: var(--size-content-narrow); }
+@utility max-w-content-default { max-width: var(--size-content-default); }
 
 @utility type-button { font-family: var(--font-body); font-weight: 500; font-size: 16px; line-height: 24px; letter-spacing: 0; }
 @utility type-desktop-header-large-default { font-family: var(--font-heading); font-weight: 400; font-size: 72px; line-height: 72px; letter-spacing: -0.04em; }

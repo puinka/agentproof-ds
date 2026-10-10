@@ -49,9 +49,9 @@ Every push to `main` rebuilds the site; pull requests get preview URLs.
 ## Status (2026-10-07)
 - Brand: cobalt + lime accent on ink neutrals, Host Grotesk + Geist Mono, radii 4/8, iso grid. `tokens/figma-variables.json`
   matches the live Figma file (fingerprints in its `_source`).
-- Foundations: Colors (text, background, border), Brand structure.
+- Foundations: Colors (text, background, border).
 - Components: Button, Field + TextInput, Checkbox, Switch, RadioList, Badge, Banner, Dialog, Table, FileUpload, Form, Filter chip, Stepper, Card, Page; Iso grid;
-  patterns: Site header, Flow diagram (103 stories, all passing).
+  patterns: Site header, Flow diagram (101 stories, all passing).
 - Wave 2 (2026-10-05): Dialog (native `<dialog>`), Banner (status message), RadioList (list and tiles), Table (caption,
   row headers, sorting, scroll frame). Matching Figma sets on the Components page, section «Wave 2 (2026-10-05)».
 - From build-run D (2026-10-07): `Page` with two content widths, `size/content-narrow` (640) and `size/content-default` (880);

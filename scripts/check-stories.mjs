@@ -39,7 +39,7 @@ for (const s of stories) {
   if (failures.length) errors.unshift(failures.map((f) => f.ev + ': ' + f.msg).join('; '));
   if (!events.length) errors.unshift('no Storybook events received');
   // Rules a story turns off in its own a11y parameters are listed here too, with the same reason (keep the two in sync).
-  const skip = { 'foundations-brand-refresh--before-after': ['landmark-unique'], 'foundations-brand-structure--all-variants': ['landmark-unique'] }[s.id] ?? [];
+  const skip = [];
   const axe = await new AxeBuilder({ page }).include('#storybook-root').disableRules(skip).analyze();
   page.off('console', onErr);
   const bad = playFailed || axe.violations.length;

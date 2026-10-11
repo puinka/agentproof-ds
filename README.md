@@ -42,6 +42,8 @@ Published at **https://ds.valerianyman.com** with Cloudflare Pages, connected to
 - Output directory: `storybook-static`
 - Node: 22 (from `.node-version`)
 - Link preview: `public/og.png` (1200 × 630), referenced in `.storybook/manager-head.html`
+- Visit analytics: PostHog (EU), in `.storybook/manager-head.html`, only on `ds.valerianyman.com`. No cookies or
+  local storage, no autocapture, no session recording; one pageview per story or docs page (`storybook_path`)
 - Custom domain: `ds.valerianyman.com` (DNS on Cloudflare, so Pages adds the CNAME itself)
 
 Every push to `main` rebuilds the site; pull requests get preview URLs.

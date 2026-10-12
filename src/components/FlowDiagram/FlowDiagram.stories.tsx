@@ -44,6 +44,25 @@ export const QuotaFlow: Story = {
     const c = within(canvasElement);
     await expect(c.getByRole('list', { name: 'Sources' }).querySelectorAll('li')).toHaveLength(3);
     await expect(c.getByRole('list', { name: 'Steps' }).querySelectorAll('li')).toHaveLength(4);
+    // With a label, the diagram is a section named by that visible label (without the brackets).
+    await expect(c.getByRole('region', { name: 'How the quota moves' })).toBeInTheDocument();
+  },
+};
+
+/** Sections and names: under a heading that already says it, leave out `label`. The page section stays the only entry. */
+export const InASection: Story = {
+  name: 'In a section with the same heading',
+  args: { label: undefined },
+  render: (args) => (
+    <section aria-labelledby="quota-flow" className="flex w-[1152px] flex-col gap-4">
+      <h2 id="quota-flow" className="m-0 type-desktop-header-card-strong text-primary">How the quota moves</h2>
+      <FlowDiagram {...args} />
+    </section>
+  ),
+  play: async ({ canvasElement }) => {
+    const c = within(canvasElement);
+    await expect(c.getAllByRole('region', { name: 'How the quota moves' })).toHaveLength(1);
+    await expect(c.getByRole('list', { name: 'Sources' })).toBeInTheDocument();
   },
 };
 

@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import { useId, useRef, type ReactNode } from 'react';
+import { useUniqueSectionName } from '../sectionNames';
 import { IsoGrid, PulseWire, isoRoute, pulseCss, ISO_SLOPE } from '../IsoGrid/IsoGrid';
 
 /**
@@ -9,6 +10,8 @@ import { IsoGrid, PulseWire, isoRoute, pulseCss, ISO_SLOPE } from '../IsoGrid/Is
  * - The meaning lives in the text, not in the wires: sources and targets are lists, steps are an ordered list.
  * - Below 760 px of container width the diagram stacks (sources, hub, targets) and drops the wires.
  * - Icons are decorative; give every node a title. Keep titles to 1–3 words, captions to one line.
+ * - Sections and names: with a `label`, the diagram is a named section, and its name is that visible label.
+ *   Without one it adds no section, so a page section whose heading already says it stays the only entry.
  */
 export interface FlowNode {
   id: string;
@@ -19,7 +22,8 @@ export interface FlowNode {
 }
 
 export interface FlowDiagramProps {
-  /** Mono label over the centre, e.g. "How the quota moves". */
+  /** Mono label over the centre, e.g. "How the quota moves". Also the diagram's section name, so don't repeat
+   * the heading the diagram sits under; leave it out when that heading already says it. */
   label?: string;
   sourcesLabel: string;
   targetsLabel: string;
@@ -82,13 +86,21 @@ export function FlowDiagram({ label, sourcesLabel, targetsLabel, sources, target
     console.warn('[FlowDiagram] 1 to 5 sources and 1 to 5 targets.');
   const rows = Math.max(sources.length, targets.length);
   const minH = rows * ROW + (rows - 1) * GAP;
+  const labelId = useId();
+  const rootRef = useRef<HTMLElement | null>(null);
+  useUniqueSectionName(rootRef, 'FlowDiagram');
+  const Root = label ? 'section' : 'div';
   return (
-    <section className="@container relative overflow-hidden rounded-container border border-subtle bg-subtle" aria-label={label ?? `${sourcesLabel} to ${targetsLabel}`}>
+    <Root
+      ref={rootRef as never}
+      className="@container relative overflow-hidden rounded-container border border-subtle bg-subtle"
+      aria-labelledby={label ? labelId : undefined}
+    >
       <IsoGrid focus={{ x: '50%', y: '55%' }} radius="55%" />
       <div className="relative flex flex-col gap-8 p-6 @3xl:p-8">
         <div className="flex justify-between gap-4 type-desktop-body-eyebrow text-tertiary">
           <span className="hidden @3xl:inline" aria-hidden="true">[ {sourcesLabel} ]</span>
-          {label && <span>[ {label} ]</span>}
+          {label && <span><span aria-hidden="true">[ </span><span id={labelId}>{label}</span><span aria-hidden="true"> ]</span></span>}
           <span className="hidden @3xl:inline" aria-hidden="true">[ {targetsLabel} ]</span>
         </div>
         <div className="flex flex-col gap-8 @3xl:flex-row @3xl:items-center @3xl:gap-0">
@@ -119,6 +131,6 @@ export function FlowDiagram({ label, sourcesLabel, targetsLabel, sources, target
           </div>
         </div>
       </div>
-    </section>
+    </Root>
   );
 }

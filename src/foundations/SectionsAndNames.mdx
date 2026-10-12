@@ -1,0 +1,45 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Sections and names" />
+
+# Sections and names
+
+People who use a screen reader often move through a page the way you'd skim a table of contents: they jump from section to section by name. A page that looks fine can still read badly. If two sections have the same name, the contents list the same entry twice, and nothing tells the listener which one is which.
+
+The rule came out of build-run D. All six agents put the payouts table under a "Past payouts" heading, which is right. The table then added a second section with the same name, and three screens failed the accessibility check. The agents' code was fine. The rule was missing.
+
+## The rule
+
+| | Rule |
+|---|---|
+| 1 | **A component adds a section only when it adds something the heading around it doesn't.** A scroll frame, a navigation or a self-contained diagram does. A table that fits on the screen doesn't. |
+| 2 | **A section takes its name from its visible heading or label** (`aria-labelledby`), not from a second, hidden name. Then the two can't drift apart. |
+| 3 | **When a component names itself, the name says what it adds** and doesn't repeat another section on the page: "Past payouts (scrolls sideways)", "Application steps". |
+
+## How the system follows it
+
+| Component | Section | Name |
+|---|---|---|
+| `Table` | Only while it overflows: the scroll frame becomes a region | "{caption} (scrolls sideways)", or `frameLabel` |
+| `FlowDiagram` | Only with a `label` | The visible label. Under a heading that already says it, leave `label` out |
+| `Stepper` | A navigation | `label`, e.g. "Application steps". Default "Progress" |
+| `SiteHeader` | Navigations | "Main", "Audience", "Main (mobile)" |
+| `Dialog` | A dialog | Its visible title |
+| `Page`, `FileUpload`, `Banner`, `BannerRegion` | No section. The app shell owns the page landmarks; FileUpload is a group named by its label | n/a |
+
+`FlowDiagram` and `Stepper` warn in development when their name repeats another section on the page.
+
+## In product code
+
+| | Guidance |
+|---|---|
+| ✅ Do | Name a section by its heading: `<section aria-labelledby={headingId}>` with the `<h2 id={headingId}>` inside. |
+| ✅ Do | Give a navigation a name that says what it is for: "Application steps", not "Navigation". |
+| ❌ Don't | Put `aria-label` on a `<section>` or add `role="region"` to name something the heading already names. |
+| ❌ Don't | Repeat a section's heading in a component's `label` inside it. |
+
+## How it is checked
+
+- **Story checks:** axe runs on every story and fails on `landmark-unique` (two sections with one name). Regression stories: `Table / In a section with the same heading` and `Flow diagram / In a section with the same heading`.
+- **`lint:ds`:** warns on `aria-label` on a `<section>` and on `role="region"` in product code.
+- **Development:** `FlowDiagram` and `Stepper` log a warning on a name clash.

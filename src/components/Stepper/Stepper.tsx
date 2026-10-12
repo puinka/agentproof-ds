@@ -1,4 +1,6 @@
+import { useRef } from 'react';
 import { Icon } from '../../icons/Icon';
+import { useUniqueSectionName } from '../sectionNames';
 
 /**
  * Figma: `Stepper` (+ `Stepper / Step`, `State=Done|Current|Default`).
@@ -11,14 +13,17 @@ export interface StepperProps {
   steps: string[];
   /** Index of the current step, 0-based. */
   current: number;
-  /** Accessible name of the list. */
+  /** Name of the navigation section. Make it say what the steps are for ("Application steps"), and don't
+   * reuse a name another section on the page already has (Foundations / Sections and names). */
   label?: string;
 }
 
 export function Stepper({ steps, current, label = 'Progress' }: StepperProps) {
   const n = steps.length;
+  const navRef = useRef<HTMLElement | null>(null);
+  useUniqueSectionName(navRef, 'Stepper');
   return (
-    <nav aria-label={label} className="@container">
+    <nav ref={navRef} aria-label={label} className="@container">
       {/* Compact form when the container is narrower than 36rem: one bar and the current step in words (Figma Breakpoint=Mobile). */}
       <div className="@xl:hidden flex flex-col gap-1">
         <div className="h-1 w-full rounded-pill bg-neutral" aria-hidden="true">

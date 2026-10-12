@@ -50,6 +50,8 @@ const rules = [
   { id: 'native-button', level: 'error', re: /<button\b/g, msg: () => 'Hand-built button. Use `Button` (variant, tone, size).' },
   { id: 'native-form', level: 'warning', re: /<form\b/g, msg: () => 'Plain <form>. `Form` moves focus to the first invalid control after submit.' },
   { id: 'own-h1', level: 'warning', re: /<h1\b/g, msg: () => 'Own <h1>. `Page` renders the page title at the one DS weight.' },
+  { id: 'section-name', level: 'warning', re: /<section\b[^>]*\baria-label=|role=["']region["']/g,
+    msg: () => 'Section named by a hidden label. Name it by its visible heading: <section aria-labelledby={headingId}>. Two sections with one name read twice to screen readers (Foundations / Sections and names).' },
   { id: 'banner-live-polite', level: 'warning', re: /live=["']polite["']/g,
     msg: () => 'Banner `live="polite"` mounting with its own region is often not announced. Put it in Page `notices` or a `BannerRegion`.' },
 ];

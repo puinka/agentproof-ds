@@ -27,6 +27,9 @@ npm run test:stories                                          # play tests + axe
 | Rows of records | `Table` (caption, `isRowHeader`, `align="end"` for amounts) | `<table>` or a grid of divs |
 | A status word | `Badge` | a coloured dot |
 
+## Sections have one name each
+Screen-reader users move through a page by its named sections, like a table of contents. Name a section by its visible heading (`<section aria-labelledby={headingId}>`), never by a hidden `aria-label` or `role="region"`, and don't repeat a section's heading in a component's `label` inside it. DS components follow the same rule (Foundations / Sections and names); axe fails a story on `landmark-unique`, and `lint:ds` warns.
+
 ## Meanings are reserved
 `error` = it failed or blocks the task. `warning` = it will cause a problem later. `danger` / `tone="destructive"` = an action that can't be undone. Never swap them for the look.
 
